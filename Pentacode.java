@@ -3,7 +3,8 @@
 import robocode.*;
 
 
-public class Pentacode extends AlphaBot{
+
+public class Pentacode extends BravoBot{
 	boolean movingForward;
 	int turnDirection = 1;
 	public void run() {
@@ -13,33 +14,28 @@ public class Pentacode extends AlphaBot{
 		// Loop forever
 		while (true) {
 			
-			ahead(200);
-			
-			movingForward = true;
-	
-			if(getOthers()<04){
-			turnGunRight(360);
-			}
-				
-			//wait(new TurnCompleteCondition(this));
-			//turnRight(90);
-			//wait(new TurnCompleteCondition(this));
-			//turnLeft(180);
-			//wait(new TurnCompleteCondition(this));
-			//turnRight(180);
-			
+		ahead(100);
+			turnRight(5 * turnDirection);
 		
-}
+			movingForward=true;	
+			
+				 	    
+			  
+		}
+			
 	}
 	
 	public void onScannedRobot(ScannedRobotEvent e) {
+		
+	if(e.getDistance()<20){
 	
-	if(e.getDistance()<100){
-		fire(3);
+		fire(2);
+		
 	}
 		else{
 		fire(1);
 	} 
+		scan();
 		
 	}
 	
@@ -54,44 +50,64 @@ public class Pentacode extends AlphaBot{
 	
 	}
 	public void onHitRobot(HitRobotEvent e) {
-		// If we're moving the other robot, reverse!
-		
-		if (e.isMyFault()==true) {
-			//reverseDirection();
-			if(getOthers()>3){
-			ahead(10);
-		
-			}
-			else{ 
-				reverseDirection();
-			}
-			
+	
+	
+	if (e.getBearing() >= 0) {
+			turnDirection = 1;
+		} else {
+			turnDirection = -1;
 		}
+		turnRight(e.getBearing());
+		if (e.getEnergy() > 16) {
+			fire(2);
+		} else if (e.getEnergy() > 10) {
+			fire(1.5);
+		} else if (e.getEnergy() > 4) {
+			fire(1);
+		} else if (e.getEnergy() > 2) {
+			fire(.5);
+		} else if (e.getEnergy() > .4) {
+			fire(.1);
+		}
+		ahead(40); // Ram him again!
+		scan();
 	}
+
+	
 		public void reverseDirection() {
 			if (movingForward) {
-				back(100);
-				turnLeft(180);
-				
+				back(100);			
 			movingForward = false;
 		} else {
 			ahead(100);
-			turnRight(180);
-			
+	
 			movingForward = true;
 		}
 	}   
 	
 		
 public void onBulletHit(BulletHitEvent bhe){
-		if(getOthers()<4){
+		if(getOthers()<2){
 
 		int enemyDamage=(int) robocode.Rules.getBulletDamage(bhe.getBullet().getPower());
 		if(robocode.Rules.getBulletDamage(bhe.getBullet().getPower())>enemyDamage){
-			reverseDirection();
+			reverseDirection2();
 		}
 		}
 	}
 	
-}
+		public void reverseDirection2() {
+			if (movingForward) {
+				back(50);
+				turnLeft(120);
+				
+			movingForward = false;
+		} else {
+			ahead(50);
+			turnRight(120);
+			
+			movingForward = true;
+		}
 
+	}
+}
