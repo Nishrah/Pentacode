@@ -1,43 +1,29 @@
 
 
+
 import robocode.*;
+import java.awt.*;
 
 
-
-public class Pentacode extends BravoBot{
+public class Pentacode extends CharlieBot{
 	boolean movingForward;
 	int turnDirection = 1;
 	public void run() {
 		
 	
-
+     setBodyColor(Color.green);
 		// Loop forever
 		while (true) {
-			
-		ahead(100);
-			turnRight(5 * turnDirection);
 		
-			movingForward=true;	
-			
-				 	    
+		movingForward=true;	 
+		ahead(100);
+		turnRight(100);
+		
 			  
 		}
 			
 	}
 	
-	public void onScannedRobot(ScannedRobotEvent e) {
-		
-	if(e.getDistance()<20){
-	
-		fire(2);
-		
-	}
-		else{
-		fire(1);
-	} 
-		scan();
-		
-	}
 	
 	public void onHitWall(HitWallEvent e) {
 		// Bounce off!
@@ -45,14 +31,17 @@ public class Pentacode extends BravoBot{
 	
 	double bearing = e.getBearing(); //get the bearing of the wall
 	    turnRight(-bearing-120); //This isn't accurate but release your robot.
-	    ahead(100); //The robot goes away from the wall.
+	
+	    ahead(100); //The robot goes away from the wall. 
+		
+
 	
 	
 	}
 	public void onHitRobot(HitRobotEvent e) {
 	
 	
-	if (e.getBearing() >= 0) {
+/*	if (e.getBearing() >= 0) {
 			turnDirection = 1;
 		} else {
 			turnDirection = -1;
@@ -70,21 +59,41 @@ public class Pentacode extends BravoBot{
 			fire(.1);
 		}
 		ahead(40); // Ram him again!
-		scan();
+		scan(); */
+		
+		if (e.getBearing() > -10 && e.getBearing() < 10) {
+			fire(3);
+		}
+	
 	}
 
 	
 		public void reverseDirection() {
 			if (movingForward) {
-				back(100);			
+			turnLeft(120);		
+			back(100);	
+					
 			movingForward = false;
 		} else {
+			turnRight(120);
 			ahead(100);
 	
 			movingForward = true;
 		}
 	}   
+public void onRobotDetected(ScannedRobotEvent e) {
+		
+	if(e.getDistance()<20){
 	
+		fire(2);
+		
+	}
+		else{
+		fire(1);
+	} 
+		scan();
+		fire(1);
+	}
 		
 public void onBulletHit(BulletHitEvent bhe){
 		if(getOthers()<2){
@@ -111,3 +120,4 @@ public void onBulletHit(BulletHitEvent bhe){
 
 	}
 }
+
